@@ -373,5 +373,107 @@ bind-address = 0.0.0.0
 ```
 sudo systemctl start/restart mysql
 ```
+#### **🌞 Récupération de l'application sur la machine**
+```
+azureuser@azure2:~$ git clone https://gitlab.com/it4lik/b2-pano-cloud-2025.git
+Cloning into 'b2-pano-cloud-2025'...
+remote: Enumerating objects: 381, done.
+remote: Counting objects: 100% (301/301), done.
+remote: Compressing objects: 100% (298/298), done.
+remote: Total 381 (delta 140), reused 0 (delta 0), pack-reused 80 (from 1)
+Receiving objects: 100% (381/381), 14.26 MiB | 29.43 MiB/s, done.
+Resolving deltas: 100% (163/163), done.
+```
+``` 
+azureuser@azure2:~$ sudo mv b2-pano-cloud-2025/ /opt/meow
+```
+
+#### **🌞 Installation des dépendances de l'application**
+
+```
+(venv) azureuser@azure2:/opt/meow$ ./bin/pip install -r requirements.txt
+```
+
+#### **🌞 Configuration de l'application**
+
+```
+azureuser@azure2:/opt/meow$ cat .env
+# Flask Configuration
+FLASK_SECRET_KEY=ewnFw95H7qBeGiVvkQl9YmnJohW6NCMMqR0arxfnWYASeCDvzwQwzLxMCboAOi3e
+FLASK_DEBUG=False
+FLASK_HOST=0.0.0.0
+FLASK_PORT=8000
+
+# Database Configuration
+DB_HOST=localhost 10.0.0.5
+DB_PORT=3306
+DB_NAME=meow_database
+DB_USER=meow
+DB_PASSWORD=meow
+
+```
+#### **🌞 Gestion de users et de droits**
+
+```bash
+azureuser@azure2:/opt/meow$ sudo useradd webapp
+azureuser@azure2:/opt/meow$ sudo chown -R webapp:webapp .
+azureuser@azure2:/opt/meow$ sudo chmod -R o-rwx /opt/meow
+azureuser@azure2:/opt/meow$ ls -l
+ls: cannot open directory '.': Permission denied
+azureuser@azure2:/opt/meow$ sudo ls -l
+total 64
+-rw-rw---- 1 webapp webapp 20131 Oct 30 08:12 LICENSE
+-rw-rw---- 1 webapp webapp  3827 Oct 30 08:12 app.py
+drwxrwx--- 2 webapp webapp  4096 Oct 30 08:19 bin
+-rw-rw---- 1 webapp webapp   223 Oct 30 08:12 docker-compose.yml
+drwxrwx--- 5 webapp webapp  4096 Oct 30 08:12 docs
+drwxrwx--- 4 webapp webapp  4096 Oct 30 08:19 include
+drwxrwx--- 3 webapp webapp  4096 Oct 30 08:14 lib
+lrwxrwxrwx 1 webapp webapp     3 Oct 30 08:14 lib64 -> lib
+-rw-rw---- 1 webapp webapp  1497 Oct 30 08:12 mkdocs.yml
+-rw-rw---- 1 webapp webapp   148 Oct 30 08:14 pyvenv.cfg
+-rw-rw---- 1 webapp webapp    58 Oct 30 08:12 requirements.txt
+drwxrwx--- 2 webapp webapp  4096 Oct 30 08:12 templates
+drwxrwx--- 5 webapp webapp  4096 Oct 30 08:15 venv
+```
+
+#### **🌞 Création d'un service webapp.service pour lancer l'application**
+
+```bash
+azureuser@azure2:/opt/meow$ sudo nano /etc/systemd/system/webapp.service
+azureuser@azure2:/opt/meow$ sudo chown webapp:webapp /etc/systemd/system/webapp.service
+azureuser@azure2:/opt/meow$ sudo systemctl daemon-reload
+```
 
 
+
+#### **🌞 Ouverture du port80 dans le(s) firewall(s)**
+
+```bash
+azureuser@azure2:/opt/meow$ sudo ufw allow 80
+Rules updated
+Rules updated (v6)
+azureuser@azure2:/opt/meow$ sudo ufw reload
+Firewall reloaded
+azureuser@azure2:/opt/meow$ journalctl | grep 'ufw'
+Oct 30 01:32:34 ubuntu systemd[1]: Starting ufw.service - Uncomplicated firewall...
+Oct 30 01:32:34 ubuntu systemd[1]: Finished ufw.service - Uncomplicated firewall.
+Oct 30 01:51:58 azure2 sudo[3032]: azureuser : TTY=pts/0 ; PWD=/home/azureuser ; USER=root ; COMMAND=/usr/sbin/ufw allow 3306
+Oct 30 07:18:01 azure2 systemd[1]: Starting ufw.service - Uncomplicated firewall...
+Oct 30 07:18:01 azure2 systemd[1]: Finished ufw.service - Uncomplicated firewall.
+Oct 30 09:19:17 azure2 sudo[9137]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw allow 80
+Oct 30 09:21:15 azure2 sudo[9155]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw reload
+Oct 30 09:21:32 azure2 sudo[9159]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw enable
+Oct 30 09:21:56 azure2 sudo[9163]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw allow 22
+Oct 30 09:22:01 azure2 sudo[9177]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw reload
+Oct 30 09:22:05 azure2 sudo[9181]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw enable
+Oct 30 09:22:17 azure2 sudo[9327]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=root ; COMMAND=/usr/sbin/ufw reload
+```
+
+#### **🌞 L'application devrait être fonctionnelle sans soucis à partir de là**
+
+```
+azureuser@azure1:~$ sudo systemctl start webapp
+azureuser@azure1:~$ sudo systemctl status webapp
+```
+ok ca marche pas et j'ai du faire de la merde a la racine meme de la vm parce que j'ai lu trop vite... je vais juste continuer sur le tp 2 :d 
