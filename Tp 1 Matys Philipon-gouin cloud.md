@@ -476,4 +476,25 @@ Oct 30 09:22:17 azure2 sudo[9327]: azureuser : TTY=pts/0 ; PWD=/opt/meow ; USER=
 azureuser@azure1:~$ sudo systemctl start webapp
 azureuser@azure1:~$ sudo systemctl status webapp
 ```
-ok ca marche pas et j'ai du faire de la merde a la racine meme de la vm parce que j'ai lu trop vite... je vais juste continuer sur le tp 2 :d 
+ v provient des nouvelles vms fraiches faite au tp2
+```
+mpg@skibidi-Sigma-Ohio-Rizz:~$ curl 158.158.51.108:8000
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purr Messages - Cat Message Board</title>
+    <style>
+        /* Modern CSS with cat-themed design */
+        :root {
+            --primary: #ff6b6b;
+            --secondary: #4ecdc4;
+            --accent: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --cat-paw: #ff9a8b;
+        }
+
+```
